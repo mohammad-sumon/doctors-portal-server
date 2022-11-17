@@ -21,13 +21,11 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    const appointmentOptionCollection = client
-      .db("doctorsPortal")
-      .collection("appointmentOptions");
+    const appointmentOptionCollection = client.db("doctorsPortal").collection("appointmentOptions");
 
-    const bookingsCollection = client
-      .db("doctorsPortal")
-      .collection("bookings");
+    const bookingsCollection = client.db("doctorsPortal").collection("bookings");
+
+    const usersCollection = client.db("doctorsPortal").collection("users");
 
     // Use Aggregate to query multiple collection and then merge data
     app.get("/appointmentOptions", async (req, res) => {
@@ -139,6 +137,14 @@ async function run() {
       const result = await bookingsCollection.insertOne(booking);
       res.send(result);
     });
+
+
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+    })
+
   } finally {
   }
 }
