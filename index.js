@@ -72,7 +72,6 @@ async function run() {
           (slot) => !bookedSlots.includes(slot)
         );
         option.slots = remainingSlots;
-        // console.log(date, option.name, remainingSlots.length);
       });
 
       res.send(options);
@@ -159,6 +158,7 @@ async function run() {
       };
 
       const alreadyBooked = await bookingsCollection.find(query).toArray();
+
       if (alreadyBooked.length) {
         const message = `You already have a booking on ${booking.appointmentDate}`;
         return res.send({ acknowledged: false, message });
@@ -174,7 +174,7 @@ async function run() {
       const user = await usersCollection.findOne(query);
       if (user) {
         const token = jwt.sign({ email }, process.env.ACCESS_TOKEN, {
-          expiresIn: "1h",
+          expiresIn: "1d",
         });
         return res.send({ accessToken: token });
       }
@@ -206,7 +206,6 @@ async function run() {
       const decodedEmail = req.decoded.email;
       const query = { email: decodedEmail };
       const user = await usersCollection.findOne(query);
-
       if (user?.role !== "admin") {
         return res.status(403).send({ message: "forbidden access" });
       }
